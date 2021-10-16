@@ -1,5 +1,5 @@
-using Expense_Tracker.Api.Authorization;
 using Expense_Tracker.Api.Helpers;
+using Expense_Tracker.Api.Middleware;
 using Expense_Tracker.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,25 +20,20 @@ namespace Expense_Tracker.Api
 {
     public class Startup
     {
-        private readonly IWebHostEnvironment _env;
-        private readonly IConfiguration _configuration;
+        public IConfiguration Configuration { get; }
 
-        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
-            _env = env;
-            _configuration = configuration;
+            Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // add services to the DI container
         public void ConfigureServices(IServiceCollection services)
         {
-            if (_env.IsProduction())
-                services.AddDbContext<DataContext>();
-            else
-                services.AddDbContext<DataContext, SqliteDataContext>();
-
+            services.AddDbContext<DataContext>();
             services.AddCors();
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddSwaggerGen(swagger =>
             {
@@ -74,38 +69,35 @@ namespace Expense_Tracker.Api
                 });
             });
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-            // configure strongly typed settings objects
-            services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
+            // configure strongly typed settings object
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
-            services.AddScoped<IJwtUtils, JwtUtils>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IEmailService, EmailService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext dataContext)
+        // configure the HTTP request pipeline
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext context)
         {
-            // migrate any database changes on startup (includes initial db creation)
-            dataContext.Database.Migrate();
+            // migrate database changes on startup (includes initial db creation)
+            context.Database.Migrate();
 
+            // generated swagger json and swagger ui middleware
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Expense_Tracker.Api v1"));
             }
-
-            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             // global cors policy
             app.UseCors(x => x
-                .AllowAnyOrigin()
+                .SetIsOriginAllowed(origin => true)
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader()
+                .AllowCredentials());
 
             // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
@@ -113,10 +105,7 @@ namespace Expense_Tracker.Api
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(x => x.MapControllers());
         }
     }
 }
