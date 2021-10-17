@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Expense_Tracker.Api.Entities;
-using Expense_Tracker.Api.Models.Users;
+using Expense_Tracker.Api.Models.Accounts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,16 +10,18 @@ namespace Expense_Tracker.Api.Helpers
 {
     public class AutoMapperProfile : Profile
     {
+        // mappings between model and entity objects
         public AutoMapperProfile()
         {
-            // User -> AuthenticateResponseModel
-            CreateMap<User, AuthenticateResponseModel>();
+            CreateMap<Account, AccountResponse>();
 
-            // RegisterRequestModel -> User
-            CreateMap<RegisterRequestModel, User>();
+            CreateMap<Account, AuthenticateResponse>();
 
-            // UpdateRequestModel -> User
-            CreateMap<UpdateRequestModel, User>()
+            CreateMap<RegisterRequest, Account>();
+
+            CreateMap<CreateRequest, Account>();
+
+            CreateMap<UpdateRequest, Account>()
                 .ForAllMembers(x => x.Condition(
                     (src, dest, prop) =>
                     {
@@ -27,10 +29,12 @@ namespace Expense_Tracker.Api.Helpers
                         if (prop == null) return false;
                         if (prop.GetType() == typeof(string) && string.IsNullOrEmpty((string)prop)) return false;
 
+                        // ignore null role
+                        if (x.DestinationMember.Name == "Role" && src.Role == null) return false;
+
                         return true;
                     }
                 ));
-
         }
     }
 }

@@ -16,11 +16,14 @@ namespace Expense_Tracker.Api
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(x =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    x.UseStartup<Startup>();
+                    x.UseUrls("http://localhost:4000");
                 });
+        }
     }
 }
