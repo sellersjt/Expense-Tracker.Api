@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Expense_Tracker.Api.Entities;
 using Expense_Tracker.Api.Models.Accounts;
+using Expense_Tracker.Api.Models.Category;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace Expense_Tracker.Api.Helpers
                         return true;
                     }
                 ));
+
+            CreateMap<Category, CategoryResponse>();
         }
     }
 }

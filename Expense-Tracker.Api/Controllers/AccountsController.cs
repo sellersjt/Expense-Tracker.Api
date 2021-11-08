@@ -11,7 +11,7 @@ using Expense_Tracker.Api.Helpers;
 namespace Expense_Tracker.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AccountsController : BaseController
     {
         private readonly IAccountService _accountService;

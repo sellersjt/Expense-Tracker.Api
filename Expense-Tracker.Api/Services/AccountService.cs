@@ -340,7 +340,7 @@ namespace Expense_Tracker.Api.Services
 
             _emailService.Send(
                 to: account.Email,
-                subject: "Sign-up Verification API - Verify Email",
+                subject: "Expense Tracker Sign-up Verification - Verify Email",
                 html: $@"<h4>Verify Email</h4>
                          <p>Thanks for registering!</p>
                          {message}"
@@ -357,7 +357,7 @@ namespace Expense_Tracker.Api.Services
 
             _emailService.Send(
                 to: email,
-                subject: "Sign-up Verification API - Email Already Registered",
+                subject: "Expense Tracker- Email Already Registered",
                 html: $@"<h4>Email Already Registered</h4>
                          <p>Your email <strong>{email}</strong> is already registered.</p>
                          {message}"
@@ -381,7 +381,7 @@ namespace Expense_Tracker.Api.Services
 
             _emailService.Send(
                 to: account.Email,
-                subject: "Sign-up Verification API - Reset Password",
+                subject: "Expense Tracker - Reset Password",
                 html: $@"<h4>Reset Password Email</h4>
                          {message}"
             );

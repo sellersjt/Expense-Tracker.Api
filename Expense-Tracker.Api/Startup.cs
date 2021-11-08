@@ -74,6 +74,7 @@ namespace Expense_Tracker.Api
 
             // configure DI for application services
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IEmailService, EmailService>();
         }
 
