@@ -38,6 +38,10 @@ namespace Expense_Tracker.Api.Helpers
                 ));
 
             CreateMap<Category, CategoryResponse>();
+
+            CreateMap<CreateCategoryRequest, Category>();
+
+            CreateMap<UpdateCategoryRequest, Category>();
         }
     }
 }

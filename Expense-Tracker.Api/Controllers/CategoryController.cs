@@ -34,5 +34,28 @@ namespace Expense_Tracker.Api.Controllers
 
             return Ok(category);
         }
+
+        [HttpPost]
+        public ActionResult<CategoryResponse> Create(CreateCategoryRequest model)
+        {
+            var category = _categoryService.Create(model, Account);
+            return Ok(category);
+        }
+
+        [HttpPut("{id:int}")]
+        public ActionResult<CategoryResponse> Update(int id, UpdateCategoryRequest model)
+        {
+            var category = _categoryService.Update(id, model, Account);
+
+            return Ok(category);
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            _categoryService.Delete(id, Account);
+
+            return Ok(new { message = "Category deleted successfully" });
+        }
     }
 }

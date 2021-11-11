@@ -13,6 +13,9 @@ namespace Expense_Tracker.Api.Services
     {
         IEnumerable<CategoryResponse> GetAll(Account account);
         CategoryResponse GetById(int id, Account account);
+        CategoryResponse Create(CreateCategoryRequest model, Account account);
+        CategoryResponse Update(int id, UpdateCategoryRequest model, Account account);
+        void Delete(int id, Account account);
     }
 
     public class CategoryService : ICategoryService
@@ -44,13 +47,60 @@ namespace Expense_Tracker.Api.Services
         {
             var category = getCategory(id);
 
-            // users can get their own category and admins can get any account
+            // users can get their own category and admins can get any category
             if (category.CreaterId != account.Id && account.Role != Role.Admin)
                 throw new AppException("Unauthorized");
 
             return _mapper.Map<CategoryResponse>(category);
         }
 
+        public  CategoryResponse Create(CreateCategoryRequest model, Account account)
+        {
+            var category = _mapper.Map<Category>(model);
+            category.CreaterId = account.Id;
+            if (account.Role != Role.Admin)
+            {
+                category.IsGlobal = false;
+            }
+
+            _context.Categories.Add(category);
+            _context.SaveChanges();
+
+            return _mapper.Map<CategoryResponse>(category);
+        }
+
+        public CategoryResponse Update(int id, UpdateCategoryRequest model, Account account)
+        {
+            var category = getCategory(id);
+
+            // users can update their own category and admins can update any category
+            if (category.CreaterId != account.Id && account.Role != Role.Admin)
+                throw new AppException("Unauthorized");
+
+            // only admins can update IsGlobal
+            if (account.Role != Role.Admin)
+                model.IsGlobal = false;
+
+            _mapper.Map(model, category);
+            _context.Categories.Update(category);
+            _context.SaveChanges();
+
+            return _mapper.Map<CategoryResponse>(category);
+        }
+
+        public void Delete(int id, Account account)
+        {
+            var category = getCategory(id);
+
+            // users can delete their own category and admins can delete any category
+            if (category.CreaterId != account.Id && account.Role != Role.Admin)
+                throw new AppException("Unauthorized");
+
+            // ToDo - Check if category is used, if so change where used to category 1 "Uncategorized" befor deleteing.
+
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+        }
 
         // helper methods
         private Category getCategory(int id)
