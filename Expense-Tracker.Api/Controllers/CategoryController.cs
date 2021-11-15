@@ -31,7 +31,6 @@ namespace Expense_Tracker.Api.Controllers
         public ActionResult<IEnumerable<CategoryResponse>> GetById(int id)
         {
             var category = _categoryService.GetById(id, Account);
-
             return Ok(category);
         }
 
@@ -46,7 +45,6 @@ namespace Expense_Tracker.Api.Controllers
         public ActionResult<CategoryResponse> Update(int id, UpdateCategoryRequest model)
         {
             var category = _categoryService.Update(id, model, Account);
-
             return Ok(category);
         }
 
@@ -54,7 +52,6 @@ namespace Expense_Tracker.Api.Controllers
         public IActionResult Delete(int id)
         {
             _categoryService.Delete(id, Account);
-
             return Ok(new { message = "Category deleted successfully" });
         }
     }

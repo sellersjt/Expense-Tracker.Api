@@ -11,6 +11,7 @@ namespace Expense_Tracker.Api.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public decimal Balance { get; set; }
         public string PasswordHash { get; set; }
         public bool AcceptTerms { get; set; }
         public Role Role { get; set; }

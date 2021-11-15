@@ -25,5 +25,6 @@ namespace Expense_Tracker.Api.Helpers
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
     }
 }

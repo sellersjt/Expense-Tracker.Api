@@ -2,6 +2,7 @@
 using Expense_Tracker.Api.Entities;
 using Expense_Tracker.Api.Models.Accounts;
 using Expense_Tracker.Api.Models.Category;
+using Expense_Tracker.Api.Models.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,14 @@ namespace Expense_Tracker.Api.Helpers
             CreateMap<CreateCategoryRequest, Category>();
 
             CreateMap<UpdateCategoryRequest, Category>();
+
+            CreateMap<Transaction, TransactionResponse>();
+
+            CreateMap<CreateTransactionRequest, Transaction>();
+
+            //CreateMap<Transaction, ReturnTransactionResponse>().ForMember(dest => dest.NewBalance, opt => opt.Ignore());
+
+            CreateMap<UpdateTransactionRequest, Transaction>();
         }
     }
 }

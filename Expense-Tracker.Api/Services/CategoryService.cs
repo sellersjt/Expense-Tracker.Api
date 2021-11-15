@@ -82,6 +82,7 @@ namespace Expense_Tracker.Api.Services
                 model.IsGlobal = false;
 
             _mapper.Map(model, category);
+
             _context.Categories.Update(category);
             _context.SaveChanges();
 

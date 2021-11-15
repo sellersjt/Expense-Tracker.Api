@@ -11,6 +11,7 @@ namespace Expense_Tracker.Api.Models.Accounts
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public Decimal Balance { get; set; }
         public string Role { get; set; }
         public DateTime Created { get; set; }
         public DateTime? Updated { get; set; }
